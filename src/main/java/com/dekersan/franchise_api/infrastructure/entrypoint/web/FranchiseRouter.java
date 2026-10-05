@@ -30,6 +30,9 @@ public class FranchiseRouter {
                 .DELETE(PRODUCT, handler::removeProduct)
                 .PATCH(PRODUCT + "/stock", handler::updateProductStock)
                 .GET(FRANCHISE + "/top-stock-products", handler::getTopStockProducts)
+                .PATCH(FRANCHISE + "/name", handler::updateFranchiseName)
+                .PATCH(BRANCH + "/name", handler::updateBranchName)
+                .PATCH(PRODUCT + "/name", handler::updateProductName)
                 .onError(ResourceNotFoundException.class,
                         (error, request) -> errorResponse(HttpStatus.NOT_FOUND, error.getMessage()))
                 .onError(DuplicateResourceException.class,
