@@ -32,6 +32,18 @@ public record Franchise(String id, String name, List<Branch> branches) {
                 .toList());
     }
 
+    public Franchise renameBranch(String branchId, String newName) {
+        requireBranch(branchId);
+        boolean nameTaken = branches.stream()
+                .anyMatch(branch -> !branch.id().equals(branchId)
+                        && branch.name().equalsIgnoreCase(newName));
+        if (nameTaken) {
+            throw new DuplicateResourceException(
+                    "Ya existe una sucursal con el nombre '" + newName + "' en la franquicia");
+        }
+        return updateBranch(branchId, branch -> branch.withName(newName));
+    }
+
     public List<TopStockProduct> topStockProductByBranch() {
         return branches.stream()
                 .flatMap(branch -> branch.productWithMostStock()
