@@ -66,9 +66,9 @@ public class FranchiseHandler {
     }
 
     public Mono<ServerResponse> getTopStockProducts(ServerRequest request) {
-        return ServerResponse.ok().body(
-                franchiseUseCase.getTopStockProductByBranch(request.pathVariable(FRANCHISE_ID)),
-                TopStockProduct.class);
+        return franchiseUseCase.getTopStockProductByBranch(request.pathVariable(FRANCHISE_ID))
+                .collectList()
+                .flatMap(products -> ServerResponse.ok().bodyValue(products));
     }
 
     private <T> Mono<T> readBody(ServerRequest request, Class<T> type) {
