@@ -71,6 +71,33 @@ public class FranchiseHandler {
                 .flatMap(products -> ServerResponse.ok().bodyValue(products));
     }
 
+    public Mono<ServerResponse> updateFranchiseName(ServerRequest request) {
+        return readBody(request, NameRequest.class)
+                .flatMap(body -> franchiseUseCase.updateFranchiseName(
+                        request.pathVariable(FRANCHISE_ID),
+                        body.name()))
+                .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
+    }
+
+    public Mono<ServerResponse> updateBranchName(ServerRequest request) {
+        return readBody(request, NameRequest.class)
+                .flatMap(body -> franchiseUseCase.updateBranchName(
+                        request.pathVariable(FRANCHISE_ID),
+                        request.pathVariable(BRANCH_ID),
+                        body.name()))
+                .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
+    }
+
+    public Mono<ServerResponse> updateProductName(ServerRequest request) {
+        return readBody(request, NameRequest.class)
+                .flatMap(body -> franchiseUseCase.updateProductName(
+                        request.pathVariable(FRANCHISE_ID),
+                        request.pathVariable(BRANCH_ID),
+                        request.pathVariable(PRODUCT_ID),
+                        body.name()))
+                .flatMap(franchise -> ServerResponse.ok().bodyValue(franchise));
+    }
+
     private <T> Mono<T> readBody(ServerRequest request, Class<T> type) {
         return request.bodyToMono(type)
                 .switchIfEmpty(Mono.error(new InvalidRequestException("El cuerpo de la petición es obligatorio")))

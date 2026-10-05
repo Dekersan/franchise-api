@@ -41,6 +41,20 @@ public record Branch(String id, String name, List<Product> products) {
                 .toList());
     }
 
+
+
+    public Branch renameProduct(String productId, String newName) {
+        requireProduct(productId);
+        boolean nameTaken = products.stream()
+                .anyMatch(product -> !product.id().equals(productId)
+                        && product.name().equalsIgnoreCase(newName));
+        if (nameTaken) {
+            throw new DuplicateResourceException(
+                    "Ya existe un producto con el nombre '" + newName + "' en la sucursal");
+        }
+        return updateProduct(productId, product -> product.withName(newName));
+    }
+
     public Optional<Product> productWithMostStock() {
         return products.stream().max(Comparator.comparingInt(Product::stock));
     }
