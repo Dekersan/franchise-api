@@ -46,6 +46,23 @@ public class FranchiseUseCase {
                 branch.updateProduct(productId, product -> product.withStock(stock)));
     }
 
+    public Mono<Franchise> updateFranchiseName(String franchiseId, String newName) {
+        return findFranchise(franchiseId)
+                .flatMap(franchise -> repository.existsByNameAndIdNot(newName, franchiseId)
+                        .flatMap(exists -> exists
+                                ? Mono.<Franchise>error(new DuplicateResourceException(
+                                "Ya existe una franquicia con el nombre '" + newName + "'"))
+                                : repository.save(franchise.withName(newName))));
+    }
+
+    public Mono<Franchise> updateBranchName(String franchiseId, String branchId, String newName) {
+        return modifyFranchise(franchiseId, franchise -> franchise.renameBranch(branchId, newName));
+    }
+
+    public Mono<Franchise> updateProductName(String franchiseId, String branchId, String productId, String newName) {
+        return modifyBranch(franchiseId, branchId, branch -> branch.renameProduct(productId, newName));
+    }
+
     public Flux<TopStockProduct> getTopStockProductByBranch(String franchiseId) {
         return findFranchise(franchiseId)
                 .flatMapIterable(Franchise::topStockProductByBranch);

@@ -19,6 +19,11 @@ public class FranchiseMongoAdapter implements FranchiseRepositoryPort {
     }
 
     @Override
+    public Mono<Boolean> existsByNameAndIdNot(String name, String id) {
+        return repository.existsByNameAndIdNot(name, id);
+    }
+
+    @Override
     public Mono<Franchise> findById(String id) {
         return repository.findById(id)
                 .map(FranchiseMapper::toDomain);
