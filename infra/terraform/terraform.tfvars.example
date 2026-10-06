@@ -1,0 +1,6 @@
+atlas_org_id = "TU_ORGANIZATION_ID"
+
+allowed_ip_addresses = [
+  "IP_DE_TU_VPS",
+  "TU_IP_LOCAL",
+]
