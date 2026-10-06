@@ -42,3 +42,6 @@ out/
 *.tfstate.*
 *.tfvars
 crash.log
+
+### Variables de entorno ###
+.env
